@@ -1,7 +1,8 @@
 # -----------------------
 # Node dependencies (all packages/apps)
 # -----------------------
-/node_modules
+# ignore all node_modules folders everywhere
+**/node_modules
 /.pnp
 .pnp.*
 /.yarn/*
