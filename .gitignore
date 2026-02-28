@@ -1,0 +1,50 @@
+# -----------------------
+# Node dependencies (all packages/apps)
+# -----------------------
+/node_modules
+/.pnp
+.pnp.*
+/.yarn/*
+
+# -----------------------
+# Build outputs
+# -----------------------
+/.next/              # Next.js build folder
+/out/                # Next.js export folder
+/build               # generic build folder
+/dist                # library build output
+*.tsbuildinfo        # TypeScript incremental files
+
+# -----------------------
+# Environment files
+# -----------------------
+.env*                # all .env files
+
+# -----------------------
+# OS / Editor files
+# -----------------------
+.DS_Store            # macOS Finder metadata
+*.pem                # private keys if any
+
+# -----------------------
+# Deployment / Hosting
+# -----------------------
+.vercel              # Vercel project folder
+
+# -----------------------
+# Testing / Coverage
+# -----------------------
+/coverage
+
+# -----------------------
+# Debug / logs
+# -----------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# -----------------------
+# Optional: Tailwind generated files
+# -----------------------
+/*.css.d.ts           # generated CSS typings if using Tailwind JIT + TypeScript
