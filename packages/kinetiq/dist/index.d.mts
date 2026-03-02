@@ -28,9 +28,10 @@ declare const easing: {
 };
 declare const spring: Record<string, Transition>;
 
-interface GlowButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
+interface GlowButtonProps extends Omit<HTMLMotionProps<"button">, "ref" | "children"> {
+    children?: React$1.ReactNode;
     magnetic?: boolean;
-    glowIntensity?: "soft" | "strong";
+    accentColor?: string;
     size?: "sm" | "md" | "lg";
 }
 declare const GlowButton: React$1.ForwardRefExoticComponent<GlowButtonProps & React$1.RefAttributes<HTMLButtonElement>>;

@@ -1,9 +1,23 @@
 {
   "name": "kinetiq-ui",
-  "version": "0.0.1",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "0.1.0",
+  "description": "Kinetiq — Motion-first React UI components",
+  "author": "Abhijeet Singh",
+  "license": "MIT",
   "private": false,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -12,14 +26,7 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts"
-  },
-  "devDependencies": {
-    "@types/react": "^19.2.14",
-    "motion": "^12.34.3",
-    "react": "19.2.3",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "build": "tsup src/index.ts --format esm,cjs --dts --css"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -27,6 +34,13 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "motion": ">=10"
+    "motion": ">=12"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "motion": "^12.34.3",
+    "react": "19.2.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }
