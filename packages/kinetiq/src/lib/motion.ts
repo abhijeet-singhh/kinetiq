@@ -1,6 +1,7 @@
+import type { Transition } from "motion/react";
+
 /**
  * Kinetiq Motion System
- * Consistent animation timing + spring presets
  */
 
 export const duration = {
@@ -8,15 +9,15 @@ export const duration = {
   fast: 0.2,
   normal: 0.35,
   slow: 0.6,
-};
+} as const;
 
 export const easing = {
   smooth: [0.4, 0.0, 0.2, 1],
   sharp: [0.4, 0.0, 0.6, 1],
   easeOut: [0.0, 0.0, 0.2, 1],
-};
+} as const;
 
-export const spring = {
+export const spring: Record<string, Transition> = {
   soft: {
     type: "spring",
     stiffness: 120,
