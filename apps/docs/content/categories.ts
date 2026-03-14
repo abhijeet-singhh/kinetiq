@@ -1,3 +1,5 @@
+// This is used by app/explore/page.tsx to render the sidebar menu
+
 export const categories = [
   { slug: "navbar", name: "Navbar" },
   { slug: "button", name: "Button" },

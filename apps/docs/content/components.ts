@@ -1,3 +1,5 @@
+// This file does NOT contain React components. It only stores metadata.
+
 export type ComponentMeta = {
   slug: string;
   name: string;
@@ -7,9 +9,9 @@ export type ComponentMeta = {
 
 export const components: ComponentMeta[] = [
   {
-    slug: "glow-button",
-    name: "Glow Button",
-    description: "Crimson animated glow button",
+    slug: "sliding-reveal-share-button",
+    name: "Sliding Reveal Share Button",
+    description: "Animated share button",
     category: "button",
   },
 ];
