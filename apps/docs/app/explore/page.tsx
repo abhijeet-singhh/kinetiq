@@ -1,217 +1,233 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { components } from "@/content/components";
 import { componentRegistry } from "@/components/registry";
 import { categories } from "@/content/categories";
 import PreviewRenderer from "@/components/PreviewRenderer";
 import Link from "next/link";
+import { ArrowLeftIcon, SunMediumIcon, MoonIcon } from "lucide-react";
+import { useAppTheme } from "@/components/theme-context";
 
 export default function ExplorePage() {
   const [activeCategory, setActiveCategory] = useState("button");
-  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useAppTheme();
+
+  // Smooth Progress Bar logic
+  const { scrollXProgress } = useScroll({ container: scrollRef });
+  const scaleX = useSpring(scrollXProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
   const filtered = components.filter((c) => c.category === activeCategory);
 
   return (
-    <div className="h-screen w-full bg-[#080808] text-[#e0e0e0] overflow-hidden flex font-mono pt-20">
-      {/* 1. THE RAIL: High-fidelity layout-aware navigation */}
-      <nav className="w-32 md:w-44 border-r border-white/5 mb-1 flex flex-col items-start py-12 justify-between z-50 bg-[#080808] relative">
-        <div className="flex flex-col w-full relative">
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat.slug;
-
-            return (
-              <button
-                key={cat.slug}
-                onClick={() => setActiveCategory(cat.slug)}
-                className="group relative px-8 py-3 flex items-center w-full transition-colors duration-300"
-              >
-                {/* 1. The Gliding Background Pill */}
-                {isActive && (
-                  <motion.div
-                    layoutId="nav-glow"
-                    transition={{
-                      type: "spring",
-                      stiffness: 350,
-                      damping: 30,
-                      mass: 1,
-                    }}
-                    className="absolute left-0 right-4 h-10 bg-primary/3 border-l-2 border-primary z-0"
-                    style={{ borderRadius: "0 4px 4px 0" }}
-                  />
-                )}
-
-                {/* 2. The Content Wrapper */}
-                <div className="relative z-10 flex flex-col items-start">
-                  <div className="flex items-center gap-3">
-                    {/* Animated Dot */}
-                    <motion.div
-                      animate={{
-                        scale: isActive ? [1, 1.5, 1.2] : 1,
-                        backgroundColor: isActive
-                          ? "#228b22"
-                          : "rgba(255,255,255,0.1)",
-                      }}
-                      className="h-1 w-1 active:w-10 rounded-full shadow-[0_0_10px_rgba(212,255,63,0)] isActive:shadow-[0_0_10px_rgba(212,255,63,0.5)]"
-                    />
-
-                    <motion.span
-                      animate={{
-                        x: isActive ? 6 : 0,
-                        color: isActive ? "#228b22" : "rgba(255,255,255,0.3)",
-                        filter: isActive ? "blur(0px)" : "blur(0.5px)",
-                      }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 25,
-                      }}
-                      className="text-[12px] font-black uppercase tracking-[0.15em] group-hover:text-white/90 transition-colors"
-                    >
-                      {cat.name}
-                    </motion.span>
-                  </div>
-
-                  {/* 3. Sliding Detail Line */}
-                  <div className="overflow-hidden h-[10px] mt-1 ml-4">
-                    <AnimatePresence mode="popLayout">
-                      {isActive && (
-                        <motion.span
-                          initial={{ y: 10, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: -10, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: "circOut" }}
-                          className="text-[8px] text-primary/40 font-mono block uppercase tracking-tighter"
-                        >
-                          Active_State
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+    <div className="h-screen w-full bg-background text-foreground overflow-hidden flex flex-col font-mono selection:bg-primary/30">
+      {/* Top Navigation */}
+      {/* Header with back link and category tabs */}
+      <header className="h-20 border-b border-border/3 flex items-center justify-between px-10 z-50 bg-background/50 backdrop-blur-xl">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-foreground/40 hover:text-primary transition-colors"
+          >
+            <ArrowLeftIcon className="size-3 group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Link>
         </div>
-
-        <div className="px-8 w-full">
-          <div className="h-[1px] w-full bg-gradient-to-r from-primary/20 to-transparent" />
+        <div className="h-px bg-linear-to-r from-primary/40 via-primary/30 to-transparent flex-1 ml-5" />
+        {/* scroll text */}
+        <div className="text-[10px] text-foreground/30 mr-3 uppercase flex items-center">
+          Scroll{" "}
+          <motion.span
+            className="ml-1 inline-block"
+            animate={{ x: [0, 5] }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "mirror",
+              duration: 1.3,
+              ease: "easeInOut",
+            }}
+          >
+            &gt;&gt;
+          </motion.span>
         </div>
-      </nav>
-
-      {/* 2. THE STAGE: Horizontal Component Display */}
-      <main className="flex-1 relative flex flex-col overflow-hidden">
-        {/* Abstract Background Element */}
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
-
-        {/* Header Section */}
-        <div className="pt-5 px-12 flex justify-between items-end">
-          <div>
-            <motion.h1
-              key={activeCategory}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="text-6xl md:text-4xl text-white/80 font-black tracking-tighter uppercase font-oxanium"
+        <nav className="flex gap-1 bg-foreground/5 p-1 rounded-sm w-164 overflow-x-auto hide-scrollbar">
+          {categories.map((cat) => (
+            <button
+              key={cat.slug}
+              onClick={() => setActiveCategory(cat.slug)}
+              className={`relative px-6 py-2 text-[10px] uppercase tracking-widest transition-all duration-300 ${
+                activeCategory === cat.slug
+                  ? "text-background"
+                  : "text-foreground/50 hover:text-black/80 dark:hover:text-primary"
+              }`}
             >
-              {activeCategory}
-              <span className="text-primary">.</span>
-            </motion.h1>
-            <p className="text-white/30 text-xs mt-4 tracking-widest uppercase font-oxanium ml-1">
-              Filtered_Results ({filtered.length})
-            </p>
-          </div>
-
-          <div className="hidden md:block text-right border-l border-white/10 pl-8">
-            <p className="text-[10px] text-white/40 leading-relaxed uppercase tracking-tight">
-              Architecture: Modular React
-              <br />
-              Animation: Motion/React
-              <br />
-              Styling: Tailwind CSS
-            </p>
-          </div>
-        </div>
-
-        {/* Horizontal Scroll Area */}
-        <div
-          ref={containerRef}
-          className="flex-1 flex items-center overflow-x-auto overflow-y-hidden no-scrollbar px-12 gap-12 snap-x"
-        >
-          <AnimatePresence mode="wait">
-            {filtered.map((component, index) => {
-              const entry =
-                componentRegistry[
-                  component.slug as keyof typeof componentRegistry
-                ];
-
-              return (
+              <span className="relative z-10">{cat.name}</span>
+              {activeCategory === cat.slug && (
                 <motion.div
-                  key={component.slug}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.1,
-                    ease: [0.23, 1, 0.32, 1],
-                  }}
-                  className="snap-center shrink-0"
-                >
-                  <Link
-                    href={`/components/${component.slug}`}
-                    className="group relative"
-                  >
-                    {/* The Card */}
-                    <div className="w-75 md:w-100 aspect-4/5 bg-[#111] border border-white/5 rounded-sm p-1 flex flex-col transition-all duration-500 group-hover:border-primary/30 group-hover:bg-[#151515]">
-                      {/* Preview Area */}
-                      <div className="flex-1 relative overflow-hidden bg-[#0c0c0c] flex items-center justify-center">
-                        <div className="relative z-10 transform transition-transform duration-700 group-hover:scale-125">
-                          {entry && (
-                            <PreviewRenderer
-                              componentName={entry.previewComponent}
-                              category={entry.category}
-                            />
-                          )}
-                        </div>
+                  layoutId="nav-pill"
+                  className="absolute inset-0 bg-primary"
+                  transition={{ type: "spring", bounce: 0.4, duration: 0.6 }}
+                />
+              )}
+            </button>
+          ))}
+        </nav>
+        {/* Theme toggle button */}
+        <button
+          onClick={toggleTheme}
+          aria-label="Toggle Theme"
+          className={`relative flex justify-center items-center w-10 h-10 text-[10px] uppercase tracking-widest transition-all duration-300 text-foreground/50 rounded-sm bg-foreground/5 ml-2`}
+        >
+          <span className="relative z-10">
+            {theme === "dark" ? (
+              <SunMediumIcon size={20} />
+            ) : (
+              <MoonIcon size={16} />
+            )}
+          </span>
+        </button>
+      </header>
 
-                        {/* Corner Accents */}
-                        <div className="absolute top-4 left-4 w-2 h-2 border-t border-l border-white/20" />
-                        <div className="absolute bottom-4 right-4 w-2 h-2 border-b border-r border-primary/40" />
-                      </div>
-
-                      {/* Info Panel */}
-                      <div className="p-8 relative">
-                        <span className="text-[10px] text-primary mb-2 block font-bold tracking-[0.3em]">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <h3 className="text-xl text-white/80 font-bold tracking-tight mb-2 group-hover:translate-x-2 transition-transform duration-500 font-oxanium">
-                          {component.name}
-                        </h3>
-                        <p className="text-sm text-white/40 line-clamp-2 font-sans">
-                          {component.description}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-
-        {/* Progress Bar (Bottom) */}
-        <div className="h-14 px-12 flex items-center gap-4 mb-1">
-          <div className="h-px flex-1 bg-white/10 relative">
-            <motion.div
-              className="absolute top-0 left-0 h-px bg-primary"
-              style={{ width: `${(filtered.indexOf(filtered[0]) + 1) * 20}%` }} // Simplified logic
+      <div className="flex-1 flex overflow-hidden">
+        {/* Main content area */}
+        <main className="flex-1 relative flex flex-col">
+          {/* Background glow and grid texture */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-primary/5 blur-[120px] rounded-full" />
+            <div
+              className="absolute top-0 left-0 w-full h-full opacity-20"
+              style={{
+                backgroundImage:
+                  "radial-gradient(#ffffff10 1px, transparent 1px)",
+                backgroundSize: "40px 40px",
+              }}
             />
           </div>
-          <span className="text-[11px] text-white/40">SCROLL_TO_EXPLORE</span>
-        </div>
-      </main>
+          {/* Category header with title and count */}
+          <div className="px-16 relative z-10">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="flex items-end gap-6"
+              >
+                <h1 className="text-7xl font-black uppercase tracking-tighter leading-none italic text-foreground/10">
+                  {activeCategory}
+                </h1>
+                <div className="pb-2 border-b-2 border-primary">
+                  <span className="text-primary text-xl font-bold tracking-tighter">
+                    {filtered.length.toString().padStart(2, "0")}
+                  </span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Horizontal Scroll Deck */}
+          <div
+            ref={scrollRef}
+            className="flex-1 flex items-center overflow-x-auto no-scrollbar px-16 gap-10 snap-x snap-mandatory"
+          >
+            <AnimatePresence mode="popLayout">
+              {filtered.map((component, index) => {
+                const entry =
+                  componentRegistry[
+                    component.slug as keyof typeof componentRegistry
+                  ];
+
+                return (
+                  <motion.div
+                    key={component.slug}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, x: -50 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                    className="snap-center shrink-0"
+                  >
+                    <Link
+                      href={`/components/${component.slug}`}
+                      className="group block relative"
+                    >
+                      {/* Perspective Card */}
+                      <div className="w-[380px] h-[480px] bg-linear-to-b from-white/30 to-white/10 dark:from-white/5 dark:to-transparent border border-border p-px group-hover:border-primary/50 hover:transition-colors hover:duration-500">
+                        <div className="w-full h-full bg-white dark:bg-[#0c0c0c] flex flex-col relative overflow-hidden">
+                          {/* Preview Area */}
+                          <div className="flex-1 bg-foreground/4 dark:bg-[#080808] flex items-center justify-center relative dark:group-hover:bg-[#0a0a0a] hover:transition-colors">
+                            <div className="transform scale-110 group-hover:scale-125 transition-transform duration-700 ease-out">
+                              {entry && (
+                                <PreviewRenderer
+                                  componentName={entry.previewComponent}
+                                  category={entry.category}
+                                />
+                              )}
+                            </div>
+
+                            {/* Corner Decals */}
+                            <div className="absolute bottom-4 right-4 h-1 w-8 bg-white/5 group-hover:bg-primary/40 transition-colors" />
+                          </div>
+
+                          {/* Info Area */}
+                          <div className="h-32 p-6 border-t border-white/5 relative bg-foreground/8 dark:bg-[#0c0c0c] flex flex-col justify-center">
+                            <h3 className="text-lg font-bold uppercase tracking-tight text-foreground/90 group-hover:translate-x-1.5 transition-transform duration-300">
+                              {component.name}
+                            </h3>
+                            <p className="text-[12px] text-muted-foreground dark:text-white/30 mt-2 line-clamp-2 leading-relaxed font-sans">
+                              {component.description}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+
+          {/* Bottom status bar */}
+          <footer className="h-16 border-t border-white/5 px-16 flex items-center gap-12">
+            <div className="flex items-center gap-4 flex-1">
+              <span className="text-[9px] text-foreground/50 uppercase whitespace-nowrap tracking-widest">
+                Scroll_Progress
+              </span>
+              <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-primary/80 origin-left"
+                  style={{ scaleX }}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-8">
+              <div className="flex flex-col items-end">
+                <span className="text-[8px] text-foreground/40 uppercase">
+                  Scroll_Direction
+                </span>
+                <span className="text-[10px] text-primary font-bold">
+                  X_AXIS
+                </span>
+              </div>
+              <div className="flex flex-col items-end border-l border-white/10 pl-8">
+                <span className="text-[8px] text-foreground/40 uppercase">
+                  Refresh_Rate
+                </span>
+                <span className="text-[10px] text-foreground/80">
+                  60Hz_STBL
+                </span>
+              </div>
+            </div>
+          </footer>
+        </main>
+      </div>
     </div>
   );
 }
