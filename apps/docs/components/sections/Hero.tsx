@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { ChevronRight, Cpu, Target, Layers, Zap } from "lucide-react";
 import { motion, useScroll, useTransform, useMotionValue } from "motion/react";
 import Link from "next/link";
@@ -119,7 +120,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.5 }}
           className="flex flex-col items-center gap-8"
         >
           <Link
@@ -165,7 +166,12 @@ export default function HeroSection() {
         </motion.div>
 
         {/* SIDE DECORATION: VERTICAL DATA STREAM */}
-        <div className="absolute right-12 bottom-12 flex flex-col items-end gap-2 overflow-hidden h-32">
+        <div
+          className={cn(
+            "absolute right-12 bottom-12 flex flex-col items-end gap-2 overflow-hidden h-32 hidden",
+            "md:flex",
+          )}
+        >
           {["01_MOTION", "02_GRAVITY", "03_SPRING", "04_INERTIA"].map(
             (text, i) => (
               <motion.span

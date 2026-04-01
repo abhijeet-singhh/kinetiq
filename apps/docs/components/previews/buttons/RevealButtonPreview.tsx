@@ -1,10 +1,10 @@
 "use client";
 
-import { SlideRevealShareButton } from "kinetiq-ui";
+import { RevealButton } from "kinetiq-ui";
 import { Twitter, Link, GithubIcon } from "lucide-react";
-export default function ShareButtonPreview() {
+export default function RevealButtonPreview() {
   return (
-    <SlideRevealShareButton
+    <RevealButton
       label="Share"
       icons={[
         <Twitter size={18} />,

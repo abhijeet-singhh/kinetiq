@@ -1,7 +1,7 @@
-import { SlideRevealShareButtonDoc } from "./SlideRevealShareButtonDoc";
+import { RevealButtonDoc } from "./RevealButtonDoc";
 
 export const buttonRegistry = {
-  [SlideRevealShareButtonDoc.slug]: SlideRevealShareButtonDoc,
+  [RevealButtonDoc.slug]: RevealButtonDoc,
 };
 
 //TODO: auto-import all docs in the folder
