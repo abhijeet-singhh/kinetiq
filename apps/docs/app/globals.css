@@ -53,9 +53,8 @@
   --glow-opacity-strong: var(--glow-opacity-strong);
 }
 
-/* =========================================================
-   BASE STYLES
-   ========================================================= */
+/* Base Styles */
+
 @layer base {
   html,
   body {
@@ -65,9 +64,8 @@
   }
 }
 
-/* =========================================================
-   SCROLLBAR UTILITIES (SCOPED ✅)
-   ========================================================= */
+/* SCROLLBAR UTILITIES (SCOPED) */
+
 @layer utilities {
   /* -------- Hidden Scrollbar -------- */
   .hide-scrollbar {
@@ -107,7 +105,7 @@
   }
 
   .scrollbar-green::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(var(--primary-hover)); /* use hover variable */
+    background-color: hsl(var(--primary-hover));
     transform: scaleY(1.05);
   }
 }
@@ -122,4 +120,120 @@ body {
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
+}
+
+/* --- PREMIUM ADAPTIVE SYNTAX THEME ---  */
+
+.code-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  background: hsl(var(--card) / 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border) / 0.4);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  margin: 1.5rem 0;
+}
+
+.code-wrapper > .code-header {
+  font-size: 11px;
+  padding: 10px 16px;
+  background: hsl(var(--muted) / 0.3);
+  border-bottom: 1px solid hsl(var(--border) / 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.code-block {
+  font-family: var(--font-oxanium), ui-monospace, monospace;
+  font-size: 13.5px;
+  line-height: 1.7;
+  padding: 20px;
+  overflow-x: auto;
+  background: transparent !important;
+  margin: 0 !important;
+  color: hsl(var(--foreground) / 0.85);
+}
+
+/* Base Token Reset */
+.code-block .token {
+  background: none !important;
+}
+
+/* --- THE "MIDNIGHT-PREMIUM" THEME --- */
+
+/* 1. Comments: Deep Slate (Low contrast but visible) */
+.code-block .token.comment,
+.code-block .token.prolog {
+  color: #64748b !important; /* Tailwind Slate-500 */
+  font-style: italic;
+}
+
+/* 2. Keywords: Electric Indigo (The "Logic" color) */
+.code-block .token.keyword,
+.code-block .token.atrule,
+.code-block .token.selector {
+  color: #818cf8 !important;
+}
+:root:not(.dark) .code-block .token.keyword {
+  color: #4f46e5 !important;
+}
+
+/* 3. Functions: Soft Mint/Cyan (The "Action" color) */
+.code-block .token.function {
+  color: #2dd4bf !important;
+}
+:root:not(.dark) .code-block .token.function {
+  color: #0d9488 !important;
+}
+
+/* 4. Strings: Golden Amber (The "Content" color) */
+.code-block .token.string,
+.code-block .token.attr-value {
+  color: #fbbf24 !important;
+}
+:root:not(.dark) .code-block .token.string {
+  color: #b45309 !important;
+}
+
+/* 5. Numbers & Booleans: Soft Coral */
+.code-block .token.number,
+.code-block .token.boolean,
+.code-block .token.constant {
+  color: #f87171 !important;
+}
+:root:not(.dark) .code-block .token.number {
+  color: #dc2626 !important;
+}
+
+/* 6. Operators & Punctuation: Muted Foreground */
+.code-block .token.operator,
+.code-block .token.punctuation {
+  color: hsl(var(--foreground) / 0.4) !important;
+}
+
+/* 7. Property/Variable: Clean White/Slate */
+.code-block .token.property,
+.code-block .token.class-name,
+.code-block .token.variable,
+.code-block .token.tag {
+  color: hsl(var(--foreground) / 0.95) !important;
+}
+
+/* 8. Built-ins: Deep Sky Blue */
+.code-block .token.builtin {
+  color: #38bdf8 !important;
+}
+:root:not(.dark) .code-block .token.builtin {
+  color: #0284c7 !important;
+}
+
+/* Custom Scrollbar for a Premium Feel */
+.code-block::-webkit-scrollbar {
+  height: 5px;
+}
+.code-block::-webkit-scrollbar-thumb {
+  background: hsl(var(--border) / 0.8);
+  border-radius: 10px;
 }
